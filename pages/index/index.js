@@ -18,7 +18,8 @@ Page({
     actualSeconds: 0,
     billingMinutes: 0,
     totalCost: 0,
-    usedMinTime: false
+    usedMinTime: false,
+    freeRemark: ''
   },
 
   timerId: null,
@@ -112,10 +113,17 @@ Page({
     const actualSecs = seconds % 60
     const actualDecimalMinutes = seconds / 60
 
-    // 计费：取实际分钟数和最短分钟数中的较大值
-    const billingMinutes = Math.max(actualDecimalMinutes, minMinutes)
-    const totalCost = Math.round(billingMinutes * price)
-    const usedMinTime = actualDecimalMinutes < minMinutes
+    // 不满最短时间不计分
+    const isFree = actualDecimalMinutes < minMinutes
+    let billingMinutes, totalCost
+
+    if (isFree) {
+      billingMinutes = 0
+      totalCost = 0
+    } else {
+      billingMinutes = actualDecimalMinutes
+      totalCost = Math.round(actualDecimalMinutes * price)
+    }
 
     this.setData({
       state: 'result',
@@ -123,7 +131,8 @@ Page({
       actualSeconds: actualSecs,
       billingMinutes: billingMinutes,
       totalCost: totalCost,
-      usedMinTime: usedMinTime
+      usedMinTime: isFree,
+      freeRemark: isFree ? '未满最短时长(' + minMinutes + '分钟)，本次免费' : ''
     })
   },
 

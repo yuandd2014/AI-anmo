@@ -385,16 +385,24 @@
     const actualSecs = secs % 60;
     const actualDecimal = secs / 60;
 
-    const billingMinutes = Math.max(actualDecimal, minMinutes);
-    const totalCost = Math.round(billingMinutes * pricePerMin);
-    const usedMinTime = actualDecimal < minMinutes;
+    // 不满最短时间不计分
+    const isFree = actualDecimal < minMinutes;
+    let billingMinutes, totalCost;
+
+    if (isFree) {
+      billingMinutes = 0;
+      totalCost = 0;
+    } else {
+      billingMinutes = actualDecimal;
+      totalCost = Math.round(actualDecimal * pricePerMin);
+    }
 
     $('resultActual').textContent = actualMins + ' 分钟 ' + actualSecs + ' 秒';
-    $('resultBilling').textContent = billingMinutes.toFixed(1) + ' 分钟';
-    $('resultTotal').textContent = totalCost + ' 积分';
+    $('resultBilling').textContent = isFree ? '未达最低标准' : (billingMinutes.toFixed(1) + ' 分钟');
+    $('resultTotal').textContent = isFree ? '免费' : (totalCost + ' 积分');
     const remark = $('resultRemark');
-    if (usedMinTime) {
-      remark.textContent = '未满最短时长，按 ' + minMinutes + ' 分钟计费';
+    if (isFree) {
+      remark.textContent = '未满最短时长 (' + minMinutes + '分钟)，本次免费';
       remark.style.display = 'block';
     } else {
       remark.style.display = 'none';

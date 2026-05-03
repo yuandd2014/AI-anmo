@@ -76,13 +76,13 @@
         </view>
         <view class="result-item">
           <text class="result-item-label">计费时长</text>
-          <text class="result-item-value">{{billingMinutes}} 分钟</text>
+          <text class="result-item-value">{{usedMinTime ? '未达最低标准' : billingMinutes + ' 分钟'}}</text>
         </view>
-        <view wx:if="{{usedMinTime}}" class="result-remark">未满最短时长，按 {{minMinutes}} 分钟计费</view>
+        <view wx:if="{{usedMinTime}}" class="result-remark">{{freeRemark}}</view>
         <view class="result-divider"></view>
         <view class="result-item result-total">
           <text class="result-item-label">应付</text>
-          <text class="result-item-value-big">{{totalCost}} 积分</text>
+          <text class="result-item-value-big">{{usedMinTime ? '免费' : totalCost + ' 积分'}}</text>
         </view>
       </view>
     </view>
