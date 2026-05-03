@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#FFF5F0">
+<title>爱的按摩</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Nunito:wght@300;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== Reset & Base ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; min-height: 100vh;
+    background: linear-gradient(180deg, #FFF5F0 0%, #FFE8E0 50%, #FFDDD0 100%);
+    font-family: 'Nunito', 'Noto Serif SC', serif;
+    color: #5C4033;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ===== Container ===== */
+  .app {
+    max-width: 420px; margin: 0 auto;
+    padding: 48px 24px 60px;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  /* ===== Header ===== */
+  .header {
+    display: flex; flex-direction: column; align-items: center;
+    margin-bottom: 48px; padding-top: 20px;
+  }
+  .heart-icon {
+    font-size: 48px; color: #E8575A; margin-bottom: 8px;
+    animation: heartbeat 1.5s ease-in-out infinite;
+    line-height: 1;
+  }
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+  .title {
+    font-size: 36px; font-weight: 900; color: #5C4033;
+    letter-spacing: 3px; font-family: 'Noto Serif SC', serif;
+  }
+  .subtitle {
+    font-size: 14px; color: #C4A08A; margin-top: 6px;
+    letter-spacing: 2px; font-weight: 400;
+  }
+
+  /* ===== Cards ===== */
+  .card {
+    width: 100%;
+    background: rgba(255,255,255,0.85);
+    border-radius: 24px; padding: 32px 28px;
+    box-shadow: 0 6px 24px rgba(232,87,90,0.10);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* ===== Setup ===== */
+  .input-group { margin-bottom: 28px; }
+  .input-group:last-of-type { margin-bottom: 32px; }
+  .input-label {
+    font-size: 15px; font-weight: 600; color: #8B6F5E;
+    margin-bottom: 10px; display: block;
+  }
+  .input-row {
+    display: flex; align-items: center;
+    background: #FFF8F5;
+    border: 2px solid #F0D5C8; border-radius: 14px;
+    padding: 14px 18px; transition: border-color 0.2s;
+  }
+  .input-row:focus-within { border-color: #E8575A; }
+  .input-field {
+    flex: 1; border: none; outline: none; background: transparent;
+    font-size: 28px; font-weight: 700; color: #5C4033;
+    font-family: 'Nunito', sans-serif;
+    min-width: 0;
+  }
+  .input-field::placeholder { color: #D4C0B4; font-weight: 400; font-size: 22px; }
+  .input-unit { font-size: 16px; color: #C4A08A; margin-left: 8px; white-space: nowrap; }
+
+  /* ===== Buttons ===== */
+  .btn-primary {
+    width: 100%; height: 52px; border: none; border-radius: 26px;
+    background: linear-gradient(135deg, #E8575A, #D44A4D);
+    color: #fff; font-size: 17px; font-weight: 700;
+    cursor: pointer; font-family: 'Noto Serif SC', serif;
+    letter-spacing: 2px; transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(232,87,90,0.35);
+    outline: none;
+  }
+  .btn-primary:active { transform: scale(0.96); }
+  .btn-primary:disabled {
+    background: #E0CFC5; box-shadow: none; color: #B8A090; cursor: not-allowed;
+  }
+
+  .btn-start {
+    width: 85%; height: 60px; border: none; border-radius: 30px;
+    background: linear-gradient(135deg, #E8575A, #D44A4D);
+    color: #fff; font-size: 20px; font-weight: 700;
+    cursor: pointer; font-family: 'Noto Serif SC', serif;
+    letter-spacing: 3px; transition: all 0.2s;
+    box-shadow: 0 6px 20px rgba(232,87,90,0.40);
+    margin-top: 32px; outline: none;
+  }
+  .btn-start:active { transform: scale(0.96); }
+
+  .btn-stop {
+    width: 75%; height: 54px; border: 3px solid #E8575A; border-radius: 27px;
+    background: #FFF8F5; color: #E8575A;
+    font-size: 18px; font-weight: 700; cursor: pointer;
+    font-family: 'Noto Serif SC', serif; letter-spacing: 2px;
+    transition: all 0.2s; margin-top: 48px; outline: none;
+  }
+  .btn-stop:active { background: #FFF0E8; transform: scale(0.96); }
+
+  .btn-link {
+    margin-top: 16px; font-size: 14px; color: #C4A08A;
+    text-decoration: underline; cursor: pointer;
+    background: none; border: none; font-family: 'Noto Serif SC', serif;
+    outline: none; padding: 8px 16px;
+  }
+
+  /* ===== Ready State ===== */
+  .info-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 0;
+  }
+  .info-label { font-size: 16px; color: #8B6F5E; }
+  .info-value { font-size: 20px; font-weight: 700; color: #E8575A; }
+  .info-divider { height: 1px; background: #F0D5C8; margin: 4px 0; }
+
+  .ready-hint {
+    font-size: 18px; color: #C4A08A; text-align: center; margin-top: 40px;
+    letter-spacing: 1px;
+  }
+
+  /* ===== Timer ===== */
+  .timer-area { margin-top: 40px; text-align: center; }
+  .timer-digits {
+    font-size: 80px; font-weight: 300; color: #5C4033;
+    letter-spacing: 6px; font-family: 'Nunito', sans-serif;
+    font-variant-numeric: tabular-nums; line-height: 1;
+  }
+  .timer-label { font-size: 14px; color: #C4A08A; margin-top: 6px; }
+
+  .cost-area { text-align: center; margin-top: 48px; }
+  .cost-number {
+    font-size: 64px; font-weight: 800; color: #E8575A;
+    line-height: 1; font-family: 'Nunito', sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+  .cost-unit { font-size: 20px; color: #C4A08A; margin-left: 4px; }
+  .cost-tip {
+    font-size: 13px; color: #D4C0B4; margin-top: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== Result ===== */
+  .result-card {
+    width: 100%;
+    background: rgba(255,255,255,0.90);
+    border-radius: 24px; padding: 36px 28px;
+    box-shadow: 0 6px 24px rgba(232,87,90,0.10);
+    display: flex; flex-direction: column; align-items: center;
+    margin-top: 24px;
+  }
+  .result-heart {
+    font-size: 52px; color: #E8575A; margin-bottom: 8px;
+    animation: heartbeat 1.5s ease-in-out infinite; line-height: 1;
+  }
+  .result-title {
+    font-size: 26px; font-weight: 700; color: #5C4033; margin-bottom: 28px;
+    font-family: 'Noto Serif SC', serif;
+  }
+  .result-item {
+    display: flex; justify-content: space-between; align-items: center;
+    width: 100%; padding: 10px 0;
+  }
+  .result-il { font-size: 15px; color: #8B6F5E; }
+  .result-iv { font-size: 16px; font-weight: 600; color: #5C4033; }
+  .result-remark { font-size: 13px; color: #C4A08A; text-align: center; font-style: italic; padding: 4px 0; }
+  .result-divider { height: 1px; background: linear-gradient(90deg, transparent, #F0D5C8, transparent); width: 100%; margin: 12px 0; }
+  .result-total { padding-top: 8px; }
+  .result-iv-big { font-size: 32px; font-weight: 800; color: #E8575A; }
+
+  .result-actions { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: 12px; }
+
+  /* ===== Hide states ===== */
+  .state { display: none; width: 100%; flex-direction: column; align-items: center; }
+  .state.active { display: flex; }
+
+  /* ===== Footer ===== */
+  .footer {
+    margin-top: auto; padding-top: 48px;
+    font-size: 12px; color: #D4C0B4; letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="heart-icon">♥</div>
+    <div class="title">爱的按摩</div>
+    <div class="subtitle">每一分钟都是爱</div>
+  </div>
+
+  <!-- State: Setup -->
+  <div class="state" id="state-setup">
+    <div class="card">
+      <div class="input-group">
+        <label class="input-label">每分钟价格</label>
+        <div class="input-row">
+          <input class="input-field" id="inputPrice" type="number" inputmode="decimal" placeholder="输入积分" step="0.1" min="0">
+          <span class="input-unit">积分</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="input-label">最短时间</label>
+        <div class="input-row">
+          <input class="input-field" id="inputMin" type="number" inputmode="decimal" placeholder="输入分钟" step="0.5" min="0">
+          <span class="input-unit">分钟</span>
+        </div>
+      </div>
+      <button class="btn-primary" id="btnConfirm" disabled>确认设置</button>
+    </div>
+  </div>
+
+  <!-- State: Ready -->
+  <div class="state" id="state-ready">
+    <div class="card">
+      <div class="info-row">
+        <span class="info-label">每分钟</span>
+        <span class="info-value" id="readyPrice">0 积分</span>
+      </div>
+      <div class="info-divider"></div>
+      <div class="info-row">
+        <span class="info-label">最短时长</span>
+        <span class="info-value" id="readyMin">0 分钟</span>
+      </div>
+    </div>
+    <div class="ready-hint">点击下方按钮开始</div>
+    <button class="btn-start" id="btnStart">♥ 开始按摩</button>
+    <button class="btn-link" id="btnBackSetup1">重新设置</button>
+  </div>
+
+  <!-- State: Timing -->
+  <div class="state" id="state-timing">
+    <div class="timer-area">
+      <div class="timer-digits" id="timerDisplay">00:00</div>
+      <div class="timer-label">已用时</div>
+    </div>
+    <div class="cost-area">
+      <span class="cost-number" id="costDisplay">0</span><span class="cost-unit">积分</span>
+      <div class="cost-tip" id="costTip"></div>
+    </div>
+    <button class="btn-stop" id="btnStop">停止计时</button>
+  </div>
+
+  <!-- State: Result -->
+  <div class="state" id="state-result">
+    <div class="result-card">
+      <div class="result-heart">♥</div>
+      <div class="result-title">按摩结束啦！</div>
+      <div class="result-details" style="width:100%">
+        <div class="result-item">
+          <span class="result-il">实际用时</span>
+          <span class="result-iv" id="resultActual">0 分钟 0 秒</span>
+        </div>
+        <div class="result-item">
+          <span class="result-il">计费时长</span>
+          <span class="result-iv" id="resultBilling">0 分钟</span>
+        </div>
+        <div class="result-remark" id="resultRemark" style="display:none"></div>
+        <div class="result-divider"></div>
+        <div class="result-item result-total">
+          <span class="result-il">应付</span>
+          <span class="result-iv-big" id="resultTotal">0 积分</span>
+        </div>
+      </div>
+    </div>
+    <div class="result-actions">
+      <button class="btn-start" id="btnRestart" style="margin-top:20px">再来一次 ♥</button>
+      <button class="btn-link" id="btnResetAll">重新设置</button>
+    </div>
+  </div>
+
+  <div class="footer">♥ 爱的按摩</div>
+</div>
+
+<script>
+(function() {
+  // State machine
+  let state = 'setup'; // setup | ready | timing | result
+  let pricePerMin = 0;
+  let minMinutes = 0;
+  let elapsedSeconds = 0;
+  let tickCount = 0;
+  let timerId = null;
+
+  const $ = id => document.getElementById(id);
+
+  // Show one state, hide others
+  function showState(name) {
+    document.querySelectorAll('.state').forEach(el => el.classList.remove('active'));
+    const el = $('state-' + name);
+    if (el) el.classList.add('active');
+    state = name;
+  }
+
+  // ===== Setup =====
+  const inputPrice = $('inputPrice');
+  const inputMin = $('inputMin');
+  const btnConfirm = $('btnConfirm');
+
+  function checkCanStart() {
+    const p = parseFloat(inputPrice.value);
+    const m = parseFloat(inputMin.value);
+    btnConfirm.disabled = !(p > 0 && m > 0);
+  }
+
+  inputPrice.addEventListener('input', checkCanStart);
+  inputMin.addEventListener('input', checkCanStart);
+
+  // Enter key to confirm
+  inputMin.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !btnConfirm.disabled) btnConfirm.click();
+  });
+
+  btnConfirm.addEventListener('click', function() {
+    const p = parseFloat(inputPrice.value);
+    const m = parseFloat(inputMin.value);
+    if (p <= 0 || m <= 0) return;
+    pricePerMin = p;
+    minMinutes = m;
+    $('readyPrice').textContent = p + ' 积分';
+    $('readyMin').textContent = m + ' 分钟';
+    showState('ready');
+  });
+
+  // ===== Ready =====
+  $('btnStart').addEventListener('click', startTimer);
+  $('btnBackSetup1').addEventListener('click', backToSetupNoClean);
+
+  function backToSetupNoClean() {
+    clearTimer();
+    showState('setup');
+    checkCanStart();
+  }
+
+  // ===== Timing =====
+  function startTimer() {
+    tickCount = 0;
+    elapsedSeconds = 0;
+    $('timerDisplay').textContent = '00:00';
+    $('costDisplay').textContent = '0';
+    $('costTip').textContent = '当前费用 · ' + pricePerMin + ' 积分/分钟';
+    showState('timing');
+
+    timerId = setInterval(function() {
+      tickCount++;
+      const secs = tickCount;
+      const mins = Math.floor(secs / 60);
+      const restSecs = secs % 60;
+      const display = String(mins).padStart(2, '0') + ':' + String(restSecs).padStart(2, '0');
+      const cost = Math.round((secs / 60) * pricePerMin);
+      $('timerDisplay').textContent = display;
+      $('costDisplay').textContent = cost;
+    }, 1000);
+  }
+
+  $('btnStop').addEventListener('click', stopTimer);
+
+  function stopTimer() {
+    clearTimer();
+
+    const secs = tickCount;
+    const actualMins = Math.floor(secs / 60);
+    const actualSecs = secs % 60;
+    const actualDecimal = secs / 60;
+
+    const billingMinutes = Math.max(actualDecimal, minMinutes);
+    const totalCost = Math.round(billingMinutes * pricePerMin);
+    const usedMinTime = actualDecimal < minMinutes;
+
+    $('resultActual').textContent = actualMins + ' 分钟 ' + actualSecs + ' 秒';
+    $('resultBilling').textContent = billingMinutes.toFixed(1) + ' 分钟';
+    $('resultTotal').textContent = totalCost + ' 积分';
+    const remark = $('resultRemark');
+    if (usedMinTime) {
+      remark.textContent = '未满最短时长，按 ' + minMinutes + ' 分钟计费';
+      remark.style.display = 'block';
+    } else {
+      remark.style.display = 'none';
+    }
+
+    showState('result');
+  }
+
+  // ===== Result =====
+  $('btnRestart').addEventListener('click', function() {
+    $('readyPrice').textContent = pricePerMin + ' 积分';
+    $('readyMin').textContent = minMinutes + ' 分钟';
+    showState('ready');
+  });
+
+  $('btnResetAll').addEventListener('click', function() {
+    clearTimer();
+    inputPrice.value = '';
+    inputMin.value = '';
+    checkCanStart();
+    showState('setup');
+  });
+
+  function clearTimer() {
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+    }
+  }
+
+  // ===== Prevent screen sleep during timing =====
+  let wakeLock = null;
+
+  async function requestWakeLock() {
+    try {
+      if (navigator.wakeLock) {
+        wakeLock = await navigator.wakeLock.request('screen');
+      }
+    } catch(e) { /* ignore */ }
+  }
+
+  function releaseWakeLock() {
+    if (wakeLock) {
+      wakeLock.release().catch(() => {});
+      wakeLock = null;
+    }
+  }
+
+  // Override startTimer to add wake lock
+  const origStart = startTimer;
+  startTimer = function() {
+    requestWakeLock();
+    origStart.call(this);
+  };
+
+  // Override stop to release wake lock
+  const origStop = stopTimer;
+  stopTimer = function() {
+    releaseWakeLock();
+    origStop.call(this);
+  };
+
+  // Override back/reset to release wake lock
+  const origBack = backToSetupNoClean;
+  backToSetupNoClean = function() {
+    releaseWakeLock();
+    origBack.call(this);
+  };
+
+  // ===== Keyboard handling (dismiss on Enter) =====
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && document.activeElement && document.activeElement.tagName === 'INPUT') {
+      document.activeElement.blur();
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
