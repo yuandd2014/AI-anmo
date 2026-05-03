@@ -6,25 +6,33 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#FFF5F0">
+<meta name="format-detection" content="telephone=no">
 <title>爱的按摩</title>
 <style>
   /* ===== Reset & Base ===== */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
     width: 100%; min-height: 100vh;
+    min-height: -webkit-fill-available;
     background: linear-gradient(180deg, #FFF5F0 0%, #FFE8E0 50%, #FFDDD0 100%);
-    font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+    font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
     color: #5C4033;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
-    user-select: none;
     -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    /* 不在这里设 user-select:none，否则 iOS 输入框会失灵 */
   }
+
+  /* 只对非输入元素禁止选中 */
+  .app { -webkit-user-select: none; user-select: none; }
+  input, textarea { -webkit-user-select: text; user-select: text; }
 
   /* ===== Container ===== */
   .app {
     max-width: 420px; margin: 0 auto;
     padding: 48px 24px 60px;
+    padding-bottom: calc(60px + env(safe-area-inset-bottom));
     min-height: 100vh;
     display: flex; flex-direction: column; align-items: center;
   }
@@ -32,7 +40,8 @@
   /* ===== Header ===== */
   .header {
     display: flex; flex-direction: column; align-items: center;
-    margin-bottom: 48px; padding-top: 20px;
+    margin-bottom: 48px; padding-top: env(safe-area-inset-top);
+    padding-top: max(20px, env(safe-area-inset-top));
   }
   .heart-icon {
     font-size: 48px; color: #E8575A; margin-bottom: 8px;
@@ -55,11 +64,9 @@
   /* ===== Cards ===== */
   .card {
     width: 100%;
-    background: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.90);
     border-radius: 24px; padding: 32px 28px;
     box-shadow: 0 6px 24px rgba(232,87,90,0.10);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
   }
 
   /* ===== Setup ===== */
@@ -79,10 +86,23 @@
   .input-field {
     flex: 1; border: none; outline: none; background: transparent;
     font-size: 28px; font-weight: 700; color: #5C4033;
-    font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-family: -apple-system, 'PingFang SC', sans-serif;
     min-width: 0;
+    /* iOS: 确保输入框可交互 */
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
   }
   .input-field::placeholder { color: #D4C0B4; font-weight: 400; font-size: 22px; }
+  /* iOS: 修复数字输入框样式 */
+  .input-field[type="number"] {
+    -moz-appearance: textfield;
+  }
+  .input-field[type="number"]::-webkit-inner-spin-button,
+  .input-field[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
   .input-unit { font-size: 16px; color: #C4A08A; margin-left: 8px; white-space: nowrap; }
 
   /* ===== Buttons ===== */
@@ -94,8 +114,11 @@
     letter-spacing: 2px; transition: all 0.2s;
     box-shadow: 0 4px 14px rgba(232,87,90,0.35);
     outline: none;
+    /* iOS: 触摸优化 */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
-  .btn-primary:active { transform: scale(0.96); }
+  .btn-primary:active { transform: scale(0.96); opacity: 0.9; }
   .btn-primary:disabled {
     background: #E0CFC5; box-shadow: none; color: #B8A090; cursor: not-allowed;
   }
@@ -107,8 +130,10 @@
     letter-spacing: 3px; transition: all 0.2s;
     box-shadow: 0 6px 20px rgba(232,87,90,0.40);
     margin-top: 32px; outline: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
-  .btn-start:active { transform: scale(0.96); }
+  .btn-start:active { transform: scale(0.96); opacity: 0.9; }
 
   .btn-stop {
     width: 75%; height: 54px; border: 3px solid #E8575A; border-radius: 27px;
@@ -116,14 +141,18 @@
     font-size: 18px; font-weight: 700; cursor: pointer;
     letter-spacing: 2px;
     transition: all 0.2s; margin-top: 48px; outline: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
-  .btn-stop:active { background: #FFF0E8; transform: scale(0.96); }
+  .btn-stop:active { background: #FFF0E8; transform: scale(0.96); opacity: 0.9; }
 
   .btn-link {
     margin-top: 16px; font-size: 14px; color: #C4A08A;
     text-decoration: underline; cursor: pointer;
     background: none; border: none;
     outline: none; padding: 8px 16px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   /* ===== Ready State ===== */
@@ -144,16 +173,22 @@
   .timer-area { margin-top: 40px; text-align: center; }
   .timer-digits {
     font-size: 80px; font-weight: 300; color: #5C4033;
-    letter-spacing: 6px; font-family: 'Nunito', sans-serif;
-    font-variant-numeric: tabular-nums; line-height: 1;
+    letter-spacing: 6px;
+    font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    /* iOS: 防止数字被缩放 */
+    -webkit-text-size-adjust: 100%;
   }
   .timer-label { font-size: 14px; color: #C4A08A; margin-top: 6px; }
 
   .cost-area { text-align: center; margin-top: 48px; }
   .cost-number {
     font-size: 64px; font-weight: 800; color: #E8575A;
-    line-height: 1; font-family: 'Nunito', sans-serif;
+    line-height: 1;
+    font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
     font-variant-numeric: tabular-nums;
+    -webkit-text-size-adjust: 100%;
   }
   .cost-unit { font-size: 20px; color: #C4A08A; margin-left: 4px; }
   .cost-tip {
@@ -175,7 +210,7 @@
     animation: heartbeat 1.5s ease-in-out infinite; line-height: 1;
   }
   .result-title {
-    font-size: 26px;     font-weight: 700; color: #5C4033; margin-bottom: 28px;
+    font-size: 26px; font-weight: 700; color: #5C4033; margin-bottom: 28px;
   }
   .result-item {
     display: flex; justify-content: space-between; align-items: center;
@@ -199,6 +234,17 @@
     margin-top: auto; padding-top: 48px;
     font-size: 12px; color: #D4C0B4; letter-spacing: 1px;
   }
+
+  /* ===== iOS Specific Fixes ===== */
+  /* 防止 iOS 橡皮筋效果（下拉刷新）*/
+  body { overscroll-behavior-y: none; }
+
+  /* iOS 输入框聚焦时避免页面缩放 */
+  @supports (-webkit-touch-callout: none) {
+    .input-field {
+      font-size: 28px !important; /* 保持 16px+ 避免 iOS 自动缩放 */
+    }
+  }
 </style>
 </head>
 <body>
@@ -206,25 +252,25 @@
 
   <!-- Header -->
   <div class="header">
-    <div class="heart-icon">♥</div>
+    <div class="heart-icon">&#9829;</div>
     <div class="title">爱的按摩</div>
     <div class="subtitle">每一分钟都是爱</div>
   </div>
 
   <!-- State: Setup -->
-  <div class="state" id="state-setup">
+  <div class="state active" id="state-setup">
     <div class="card">
       <div class="input-group">
         <label class="input-label">每分钟价格</label>
         <div class="input-row">
-          <input class="input-field" id="inputPrice" type="number" inputmode="decimal" placeholder="输入积分" step="0.1" min="0">
+          <input class="input-field" id="inputPrice" type="number" inputmode="decimal" placeholder="输入积分" step="0.1" min="0" autocomplete="off">
           <span class="input-unit">积分</span>
         </div>
       </div>
       <div class="input-group">
         <label class="input-label">最短时间</label>
         <div class="input-row">
-          <input class="input-field" id="inputMin" type="number" inputmode="decimal" placeholder="输入分钟" step="0.5" min="0">
+          <input class="input-field" id="inputMin" type="number" inputmode="decimal" placeholder="输入分钟" step="0.5" min="0" autocomplete="off">
           <span class="input-unit">分钟</span>
         </div>
       </div>
@@ -246,7 +292,7 @@
       </div>
     </div>
     <div class="ready-hint">点击下方按钮开始</div>
-    <button class="btn-start" id="btnStart">♥ 开始按摩</button>
+    <button class="btn-start" id="btnStart">&#9829; 开始按摩</button>
     <button class="btn-link" id="btnBackSetup1">重新设置</button>
   </div>
 
@@ -266,7 +312,7 @@
   <!-- State: Result -->
   <div class="state" id="state-result">
     <div class="result-card">
-      <div class="result-heart">♥</div>
+      <div class="result-heart">&#9829;</div>
       <div class="result-title">按摩结束啦！</div>
       <div class="result-details" style="width:100%">
         <div class="result-item">
@@ -286,12 +332,12 @@
       </div>
     </div>
     <div class="result-actions">
-      <button class="btn-start" id="btnRestart" style="margin-top:20px">再来一次 ♥</button>
+      <button class="btn-start" id="btnRestart" style="margin-top:20px">&#9829; 再来一次</button>
       <button class="btn-link" id="btnResetAll">重新设置</button>
     </div>
   </div>
 
-  <div class="footer">♥ 爱的按摩</div>
+  <div class="footer">&#9829; 爱的按摩</div>
 </div>
 
 <script>
@@ -308,20 +354,22 @@
 
   // Show one state, hide others
   function showState(name) {
-    document.querySelectorAll('.state').forEach(el => el.classList.remove('active'));
-    const el = $('state-' + name);
+    document.querySelectorAll('.state').forEach(function(el) {
+      el.classList.remove('active');
+    });
+    var el = $('state-' + name);
     if (el) el.classList.add('active');
     state = name;
   }
 
   // ===== Setup =====
-  const inputPrice = $('inputPrice');
-  const inputMin = $('inputMin');
-  const btnConfirm = $('btnConfirm');
+  var inputPrice = $('inputPrice');
+  var inputMin = $('inputMin');
+  var btnConfirm = $('btnConfirm');
 
   function checkCanStart() {
-    const p = parseFloat(inputPrice.value);
-    const m = parseFloat(inputMin.value);
+    var p = parseFloat(inputPrice.value);
+    var m = parseFloat(inputMin.value);
     btnConfirm.disabled = !(p > 0 && m > 0);
   }
 
@@ -334,8 +382,8 @@
   });
 
   btnConfirm.addEventListener('click', function() {
-    const p = parseFloat(inputPrice.value);
-    const m = parseFloat(inputMin.value);
+    var p = parseFloat(inputPrice.value);
+    var m = parseFloat(inputMin.value);
     if (p <= 0 || m <= 0) return;
     pricePerMin = p;
     minMinutes = m;
@@ -365,11 +413,11 @@
 
     timerId = setInterval(function() {
       tickCount++;
-      const secs = tickCount;
-      const mins = Math.floor(secs / 60);
-      const restSecs = secs % 60;
-      const display = String(mins).padStart(2, '0') + ':' + String(restSecs).padStart(2, '0');
-      const cost = Math.round((secs / 60) * pricePerMin);
+      var secs = tickCount;
+      var mins = Math.floor(secs / 60);
+      var restSecs = secs % 60;
+      var display = String(mins).padStart(2, '0') + ':' + String(restSecs).padStart(2, '0');
+      var cost = Math.round((secs / 60) * pricePerMin);
       $('timerDisplay').textContent = display;
       $('costDisplay').textContent = cost;
     }, 1000);
@@ -380,14 +428,14 @@
   function stopTimer() {
     clearTimer();
 
-    const secs = tickCount;
-    const actualMins = Math.floor(secs / 60);
-    const actualSecs = secs % 60;
-    const actualDecimal = secs / 60;
+    var secs = tickCount;
+    var actualMins = Math.floor(secs / 60);
+    var actualSecs = secs % 60;
+    var actualDecimal = secs / 60;
 
     // 不满最短时间不计分
-    const isFree = actualDecimal < minMinutes;
-    let billingMinutes, totalCost;
+    var isFree = actualDecimal < minMinutes;
+    var billingMinutes, totalCost;
 
     if (isFree) {
       billingMinutes = 0;
@@ -400,7 +448,7 @@
     $('resultActual').textContent = actualMins + ' 分钟 ' + actualSecs + ' 秒';
     $('resultBilling').textContent = isFree ? '未达最低标准' : (billingMinutes.toFixed(1) + ' 分钟');
     $('resultTotal').textContent = isFree ? '免费' : (totalCost + ' 积分');
-    const remark = $('resultRemark');
+    var remark = $('resultRemark');
     if (isFree) {
       remark.textContent = '未满最短时长 (' + minMinutes + '分钟)，本次免费';
       remark.style.display = 'block';
@@ -434,39 +482,41 @@
   }
 
   // ===== Prevent screen sleep during timing =====
-  let wakeLock = null;
+  var wakeLock = null;
 
-  async function requestWakeLock() {
+  function requestWakeLock() {
     try {
-      if (navigator.wakeLock) {
-        wakeLock = await navigator.wakeLock.request('screen');
+      if ('wakeLock' in navigator) {
+        navigator.wakeLock.request('screen').then(function(lock) {
+          wakeLock = lock;
+        }).catch(function() {});
       }
-    } catch(e) { /* ignore */ }
+    } catch(e) {}
   }
 
   function releaseWakeLock() {
     if (wakeLock) {
-      wakeLock.release().catch(() => {});
+      try { wakeLock.release(); } catch(e) {}
       wakeLock = null;
     }
   }
 
   // Override startTimer to add wake lock
-  const origStart = startTimer;
+  var origStart = startTimer;
   startTimer = function() {
     requestWakeLock();
     origStart.call(this);
   };
 
   // Override stop to release wake lock
-  const origStop = stopTimer;
+  var origStop = stopTimer;
   stopTimer = function() {
     releaseWakeLock();
     origStop.call(this);
   };
 
   // Override back/reset to release wake lock
-  const origBack = backToSetupNoClean;
+  var origBack = backToSetupNoClean;
   backToSetupNoClean = function() {
     releaseWakeLock();
     origBack.call(this);
