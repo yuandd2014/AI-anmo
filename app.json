@@ -1,0 +1,13 @@
+{
+  "pages": [
+    "pages/index/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "爱的按摩",
+    "navigationBarBackgroundColor": "#FFF5F0",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#FFF5F0"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

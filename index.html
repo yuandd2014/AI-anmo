@@ -7,15 +7,13 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#FFF5F0">
 <title>爱的按摩</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Nunito:wght@300;600;700;800&display=swap" rel="stylesheet">
 <style>
   /* ===== Reset & Base ===== */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
     width: 100%; min-height: 100vh;
     background: linear-gradient(180deg, #FFF5F0 0%, #FFE8E0 50%, #FFDDD0 100%);
-    font-family: 'Nunito', 'Noto Serif SC', serif;
+    font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
     color: #5C4033;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
@@ -47,7 +45,7 @@
   }
   .title {
     font-size: 36px; font-weight: 900; color: #5C4033;
-    letter-spacing: 3px; font-family: 'Noto Serif SC', serif;
+    letter-spacing: 3px;
   }
   .subtitle {
     font-size: 14px; color: #C4A08A; margin-top: 6px;
@@ -81,7 +79,7 @@
   .input-field {
     flex: 1; border: none; outline: none; background: transparent;
     font-size: 28px; font-weight: 700; color: #5C4033;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
     min-width: 0;
   }
   .input-field::placeholder { color: #D4C0B4; font-weight: 400; font-size: 22px; }
@@ -92,7 +90,7 @@
     width: 100%; height: 52px; border: none; border-radius: 26px;
     background: linear-gradient(135deg, #E8575A, #D44A4D);
     color: #fff; font-size: 17px; font-weight: 700;
-    cursor: pointer; font-family: 'Noto Serif SC', serif;
+    cursor: pointer;
     letter-spacing: 2px; transition: all 0.2s;
     box-shadow: 0 4px 14px rgba(232,87,90,0.35);
     outline: none;
@@ -106,7 +104,6 @@
     width: 85%; height: 60px; border: none; border-radius: 30px;
     background: linear-gradient(135deg, #E8575A, #D44A4D);
     color: #fff; font-size: 20px; font-weight: 700;
-    cursor: pointer; font-family: 'Noto Serif SC', serif;
     letter-spacing: 3px; transition: all 0.2s;
     box-shadow: 0 6px 20px rgba(232,87,90,0.40);
     margin-top: 32px; outline: none;
@@ -117,7 +114,7 @@
     width: 75%; height: 54px; border: 3px solid #E8575A; border-radius: 27px;
     background: #FFF8F5; color: #E8575A;
     font-size: 18px; font-weight: 700; cursor: pointer;
-    font-family: 'Noto Serif SC', serif; letter-spacing: 2px;
+    letter-spacing: 2px;
     transition: all 0.2s; margin-top: 48px; outline: none;
   }
   .btn-stop:active { background: #FFF0E8; transform: scale(0.96); }
@@ -125,7 +122,7 @@
   .btn-link {
     margin-top: 16px; font-size: 14px; color: #C4A08A;
     text-decoration: underline; cursor: pointer;
-    background: none; border: none; font-family: 'Noto Serif SC', serif;
+    background: none; border: none;
     outline: none; padding: 8px 16px;
   }
 
@@ -178,8 +175,7 @@
     animation: heartbeat 1.5s ease-in-out infinite; line-height: 1;
   }
   .result-title {
-    font-size: 26px; font-weight: 700; color: #5C4033; margin-bottom: 28px;
-    font-family: 'Noto Serif SC', serif;
+    font-size: 26px;     font-weight: 700; color: #5C4033; margin-bottom: 28px;
   }
   .result-item {
     display: flex; justify-content: space-between; align-items: center;
@@ -467,6 +463,9 @@
     releaseWakeLock();
     origBack.call(this);
   };
+
+  // ===== Initialize =====
+  showState('setup');
 
   // ===== Keyboard handling (dismiss on Enter) =====
   document.addEventListener('keydown', function(e) {

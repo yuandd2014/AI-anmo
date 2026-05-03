@@ -1,0 +1,95 @@
+<view class="container">
+
+  <!-- =========== 顶部爱心标题 =========== -->
+  <view class="header">
+    <view class="heart-icon">♥</view>
+    <text class="title">爱的按摩</text>
+    <text class="subtitle">每一分钟都是爱</text>
+  </view>
+
+  <!-- =========== 状态：设置参数 =========== -->
+  <block wx:if="{{state === 'setup'}}">
+    <view class="setup-card">
+      <view class="input-group">
+        <text class="input-label">每分钟价格</text>
+        <view class="input-row">
+          <input class="input-field" type="digit" value="{{pricePerMin}}" bindinput="onPriceInput" placeholder="输入积分" maxlength="6" />
+          <text class="input-unit">积分</text>
+        </view>
+      </view>
+      <view class="input-group">
+        <text class="input-label">最短时间</text>
+        <view class="input-row">
+          <input class="input-field" type="digit" value="{{minMinutes}}" bindinput="onMinInput" placeholder="输入分钟" maxlength="4" />
+          <text class="input-unit">分钟</text>
+        </view>
+      </view>
+      <button class="btn-primary" bindtap="onConfirmSetup" disabled="{{!canStart}}">确认设置</button>
+    </view>
+  </block>
+
+  <!-- =========== 状态：准备开始 =========== -->
+  <block wx:elif="{{state === 'ready'}}">
+    <view class="info-card">
+      <view class="info-row">
+        <text class="info-label">每分钟</text>
+        <text class="info-value">{{pricePerMin}} 积分</text>
+      </view>
+      <view class="info-divider"></view>
+      <view class="info-row">
+        <text class="info-label">最短时长</text>
+        <text class="info-value">{{minMinutes}} 分钟</text>
+      </view>
+    </view>
+    <view class="big-number ready-hint">
+      点击下方按钮开始
+    </view>
+    <button class="btn-start" bindtap="onStartTimer">♥ 开始按摩</button>
+    <view class="btn-back" bindtap="onBackToSetup">重新设置</view>
+  </block>
+
+  <!-- =========== 状态：计时中 =========== -->
+  <block wx:elif="{{state === 'timing'}}">
+    <view class="timer-display">
+      <text class="timer-text">{{displayTime}}</text>
+      <text class="timer-label">已用时</text>
+    </view>
+    <view class="cost-display">
+      <text class="cost-amount">{{currentCost}}</text>
+      <text class="cost-unit">积分</text>
+    </view>
+    <view class="cost-tip">
+      当前费用 · {{pricePerMin}} 积分/分钟
+    </view>
+    <button class="btn-stop" bindtap="onStopTimer">停止计时</button>
+  </block>
+
+  <!-- =========== 状态：结果 =========== -->
+  <block wx:elif="{{state === 'result'}}">
+    <view class="result-card">
+      <view class="result-heart">♥</view>
+      <text class="result-title">按摩结束啦！</text>
+      <view class="result-details">
+        <view class="result-item">
+          <text class="result-item-label">实际用时</text>
+          <text class="result-item-value">{{actualMinutes}} 分钟 {{actualSeconds}} 秒</text>
+        </view>
+        <view class="result-item">
+          <text class="result-item-label">计费时长</text>
+          <text class="result-item-value">{{billingMinutes}} 分钟</text>
+        </view>
+        <view wx:if="{{usedMinTime}}" class="result-remark">未满最短时长，按 {{minMinutes}} 分钟计费</view>
+        <view class="result-divider"></view>
+        <view class="result-item result-total">
+          <text class="result-item-label">应付</text>
+          <text class="result-item-value-big">{{totalCost}} 积分</text>
+        </view>
+      </view>
+    </view>
+    <view class="result-actions">
+      <button class="btn-start" bindtap="onRestart">再来一次 ♥</button>
+      <view class="btn-back" bindtap="onResetAll">重新设置</view>
+    </view>
+  </block>
+
+</view>
